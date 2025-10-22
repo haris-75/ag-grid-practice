@@ -1,1 +1,13 @@
 @import "tailwindcss";
+/* row hover */
+.ag-theme-alpine .ag-row:hover {
+  background-color: #f3f4f6 !important; /* Tailwind gray-100 */
+}
+/* selected row */
+.ag-theme-alpine .ag-row-selected {
+  background-color: #e0f2fe !important; /* light blue */
+}
+/* header tweaks (keeps Tailwind look) */
+.ag-theme-alpine .ag-header {
+  background-color: #f8fafc;
+}
