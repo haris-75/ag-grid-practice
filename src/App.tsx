@@ -1,6 +1,6 @@
 import {} from "react";
 import DataOverviewTable from "./components/DataOveriewTable";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import type { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -39,10 +39,6 @@ const App = () => {
       getColumnObject(key, sample[key as keyof DataRow])
     );
   }, [initialData]);
-
-  useEffect(() => {
-    if (initialData && initialData?.length > 0) setRowData(initialData);
-  }, [setRowData]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
