@@ -50,6 +50,7 @@ export type DataRow = {
   field_48: string;
   field_49: boolean;
   field_50: string;
+  rowColor: string;
 };
 
 export type DataRow2 = {

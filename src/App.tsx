@@ -29,7 +29,7 @@ const getColumnObject = (
 };
 
 const App = () => {
-  const initialData = useMemo(() => generateDataArray(5000), []);
+  const initialData = useMemo(() => generateDataArray(10000), []);
   const [rowData, setRowData] = useState<DataRow[]>(initialData);
 
   const colDefs = useMemo<ColDef[]>(() => {

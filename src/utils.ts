@@ -18,6 +18,27 @@ const randomDate = (): string => {
   return date.toISOString().split("T")[0];
 };
 
+const randomColor = (): string => {
+  const hue = Math.floor(Math.random() * 360);
+  const saturation = 50 + Math.random() * 50;
+  const lightness = 60 + Math.random() * 20;
+  const hslToHex = (h: number, s: number, l: number): string => {
+    s /= 100;
+    l /= 100;
+    const k = (n: number) => (n + h / 30) % 12;
+    const a = s * Math.min(l, 1 - l);
+    const f = (n: number) =>
+      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+    const toHex = (x: number) =>
+      Math.round(x * 255)
+        .toString(16)
+        .padStart(2, "0");
+    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
+  };
+
+  return hslToHex(hue, saturation, lightness);
+};
+
 const generateRow = (): DataRow => {
   const obj: Record<string, string | number | boolean> = {};
 
@@ -41,7 +62,7 @@ const generateRow = (): DataRow => {
     }
   }
 
-  return obj as DataRow;
+  return { ...obj, rowColor: randomColor() } as DataRow;
 };
 
 export function generateDataArray(n: number): DataRow[] {

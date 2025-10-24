@@ -1,6 +1,6 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
-import type { GetRowIdParams, ColDef } from "ag-grid-community";
+import type { GetRowIdParams, ColDef, RowClassParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import type { DataRow } from "../types";
@@ -32,6 +32,10 @@ const DataOverviewTable = ({
     []
   );
   const getRowId = (params: GetRowIdParams): string => params.data.field_3;
+  const getRowStyle = useCallback((params: RowClassParams<DataRow>) => {
+    const color = params.data?.rowColor;
+    return color ? { backgroundColor: color } : undefined;
+  }, []);
 
   return (
     <div className="w-full max-w-7xl">
@@ -51,6 +55,7 @@ const DataOverviewTable = ({
             components={frameworkComponents}
             context={{ setRowData }}
             getRowId={getRowId}
+            getRowStyle={getRowStyle}
           />
         </div>
       </div>
