@@ -1,37 +1,21 @@
 import { useMemo, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
-import type { GetRowIdParams, ColDef } from "ag-grid-community";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
+import type { GetRowIdParams } from "ag-grid-community";
+import ToggleRenderer from "./ToggleRenderer";
+import { useDataStore } from "../stores/useDataStore";
 import type { DataRow } from "../types";
-import ToggleRenderer from "../components/ToggleRenderer";
 
-interface DataOverviewTableProps {
-  rowData: DataRow[];
-  setRowData: React.Dispatch<React.SetStateAction<DataRow[]>>;
-  colDefs: ColDef[];
-}
+const DataOverviewTable = () => {
+  const rowData = useDataStore((s) => s.rowData);
+  const colDefs = useDataStore((s) => s.colDefs);
 
-const DataOverviewTable = ({
-  rowData,
-  setRowData,
-  colDefs,
-}: DataOverviewTableProps) => {
   const gridRef = useRef<AgGridReact<DataRow> | null>(null);
-  const defaultColDef = useMemo(
-    () => ({
-      flex: 1,
-      minWidth: 120,
-    }),
-    []
-  );
+  const defaultColDef = useMemo(() => ({ flex: 1, minWidth: 120 }), []);
   const frameworkComponents = useMemo(
-    () => ({
-      toggleRenderer: ToggleRenderer,
-    }),
+    () => ({ toggleRenderer: ToggleRenderer }),
     []
   );
-  const getRowId = (params: GetRowIdParams): string => params.data.field_3;
+  const getRowId = (p: GetRowIdParams<DataRow>) => p.data.field_3;
 
   return (
     <div className="w-full max-w-7xl">
@@ -39,17 +23,15 @@ const DataOverviewTable = ({
         <div className="text-2xl font-semibold text-gray-700 p-4 border-b border-gray-200 bg-gray-50">
           Data Overview
         </div>
-
         <div className="ag-theme-alpine" style={{ height: 600, width: "100%" }}>
-          <AgGridReact
+          <AgGridReact<DataRow>
             ref={gridRef}
             rowData={rowData}
             columnDefs={colDefs}
             defaultColDef={defaultColDef}
             rowSelection="single"
-            animateRows={true}
+            animateRows
             components={frameworkComponents}
-            context={{ setRowData }}
             getRowId={getRowId}
           />
         </div>
