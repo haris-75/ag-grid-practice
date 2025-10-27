@@ -1,11 +1,10 @@
-import {} from "react";
-import DataOverviewTable from "./components/DataOveriewTable";
 import { useMemo, useState } from "react";
 import type { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import type { ColumnObject, DataRow } from "./types";
 import { generateDataArray } from "./utils";
+import DataOverviewTable from "./components/DataOveriewTable";
 
 const getColumnObject = (
   key: string,
@@ -35,9 +34,22 @@ const App = () => {
   const colDefs = useMemo<ColDef[]>(() => {
     if (!initialData || initialData.length === 0) return [];
     const sample = initialData[0];
-    return Object.keys(sample).map((key) =>
+    const baseCols = Object.keys(sample).map((key) =>
       getColumnObject(key, sample[key as keyof DataRow])
     );
+
+    baseCols.push({
+      field: "actions",
+      headerName: "Change Color",
+      cellRenderer: "colorChangeRenderer",
+      minWidth: 150,
+      cellStyle: { textAlign: "center" },
+      resizable: true,
+      sortable: false,
+      filter: false,
+    });
+
+    return baseCols;
   }, [initialData]);
 
   return (

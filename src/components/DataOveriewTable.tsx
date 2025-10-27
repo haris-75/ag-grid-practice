@@ -4,7 +4,8 @@ import type { GetRowIdParams, ColDef, RowClassParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import type { DataRow } from "../types";
-import ToggleRenderer from "../components/ToggleRenderer";
+import ToggleRenderer from "./ToggleRenderer";
+import ColorChangeRenderer from "./ColorChangeRenderer";
 
 interface DataOverviewTableProps {
   rowData: DataRow[];
@@ -18,6 +19,7 @@ const DataOverviewTable = ({
   colDefs,
 }: DataOverviewTableProps) => {
   const gridRef = useRef<AgGridReact<DataRow> | null>(null);
+
   const defaultColDef = useMemo(
     () => ({
       flex: 1,
@@ -25,17 +27,40 @@ const DataOverviewTable = ({
     }),
     []
   );
+
   const frameworkComponents = useMemo(
     () => ({
       toggleRenderer: ToggleRenderer,
+      colorChangeRenderer: ColorChangeRenderer,
     }),
     []
   );
+
   const getRowId = (params: GetRowIdParams): string => params.data.field_3;
+
   const getRowStyle = useCallback((params: RowClassParams<DataRow>) => {
     const color = params.data?.rowColor;
     return color ? { backgroundColor: color } : undefined;
   }, []);
+
+  // Function to update specific row color
+  const updateRowColor = useCallback(
+    (rowId: string, newColor: string) => {
+      setRowData((prevData) =>
+        prevData.map((row) =>
+          row.field_3 === rowId ? { ...row, rowColor: newColor } : row
+        )
+      );
+
+      // Refresh only that row in grid
+      const rowNode = gridRef.current?.api.getRowNode(rowId);
+      if (rowNode) {
+        rowNode.setDataValue("rowColor", newColor);
+        gridRef.current?.api.refreshCells({ rowNodes: [rowNode], force: true });
+      }
+    },
+    [setRowData]
+  );
 
   return (
     <div className="w-full max-w-7xl">
@@ -51,11 +76,12 @@ const DataOverviewTable = ({
             columnDefs={colDefs}
             defaultColDef={defaultColDef}
             rowSelection="single"
-            animateRows={true}
+            animateRows
             components={frameworkComponents}
-            context={{ setRowData }}
+            context={{ updateRowColor }}
             getRowId={getRowId}
             getRowStyle={getRowStyle}
+            suppressRowClickSelection={true}
           />
         </div>
       </div>
