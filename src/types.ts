@@ -19,3 +19,11 @@ export interface ColumnObject extends ColDef {
 export interface GetRowIdParams {
   data: DataRow;
 }
+
+export interface IDataStoreSelector {
+  rowData: DataRow[];
+}
+
+export interface IColDefsSelector {
+  colDefs: ColDef[];
+}

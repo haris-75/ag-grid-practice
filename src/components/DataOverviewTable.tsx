@@ -1,13 +1,13 @@
 import { useMemo, useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
-import type { GetRowIdParams } from "ag-grid-community";
+import type { ColDef, GetRowIdParams } from "ag-grid-community";
 import ToggleRenderer from "./ToggleRenderer";
 import { useDataStore } from "../stores/useDataStore";
-import type { DataRow } from "../types";
+import type { DataRow, IColDefsSelector, IDataStoreSelector } from "../types";
 
 const DataOverviewTable = () => {
-  const rowData = useDataStore((s) => s.rowData);
-  const colDefs = useDataStore((s) => s.colDefs);
+  const rowData: DataRow[] = useDataStore((s: IDataStoreSelector) => s.rowData);
+  const colDefs: ColDef[] = useDataStore((s: IColDefsSelector) => s.colDefs);
 
   const gridRef = useRef<AgGridReact<DataRow> | null>(null);
   const defaultColDef = useMemo(() => ({ flex: 1, minWidth: 120 }), []);
