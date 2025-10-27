@@ -11,3 +11,31 @@
 .ag-theme-alpine .ag-header {
   background-color: #f8fafc;
 }
+
+.hide-native-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* WebKit browsers (Chrome, Safari, Edge Chromium) */
+.hide-native-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+/* If you want to target AG Grid specifically (optional) */
+.ag-theme-alpine .ag-body-viewport.hide-native-scrollbar,
+.ag-theme-alpine .ag-center-cols-viewport.hide-native-scrollbar,
+.ag-theme-alpine .ag-body.hide-native-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.ag-theme-alpine .ag-body-viewport.hide-native-scrollbar::-webkit-scrollbar,
+.ag-theme-alpine
+  .ag-center-cols-viewport.hide-native-scrollbar::-webkit-scrollbar,
+.ag-theme-alpine .ag-body.hide-native-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
