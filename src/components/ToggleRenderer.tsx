@@ -9,11 +9,11 @@ const ToggleRenderer = (
   const { value, data, colDef, api, node } = props;
   const setCell = useDataStore((s) => s.setCell);
 
-  const field = colDef?.field as keyof DataRow | undefined;
+  const field = colDef?.field;
 
   const handleToggle = () => {
     if (!field || !data) return;
-    setCell(data.field_3, field, !value);
+    setCell(data.id, field, !value);
     api.refreshCells({
       rowNodes: [node],
       columns: [String(field)],

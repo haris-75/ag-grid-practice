@@ -15,7 +15,7 @@ const DataOverviewTable = () => {
     () => ({ toggleRenderer: ToggleRenderer }),
     []
   );
-  const getRowId = (p: GetRowIdParams<DataRow>) => p.data.field_3;
+  const getRowId = (p: GetRowIdParams<DataRow>) => p.data.id;
 
   return (
     <div className="w-full max-w-7xl">
@@ -24,7 +24,7 @@ const DataOverviewTable = () => {
           Data Overview
         </div>
         <div className="ag-theme-alpine" style={{ height: 600, width: "100%" }}>
-          <AgGridReact<DataRow>
+          <AgGridReact
             ref={gridRef}
             rowData={rowData}
             columnDefs={colDefs}
@@ -33,6 +33,7 @@ const DataOverviewTable = () => {
             animateRows
             components={frameworkComponents}
             getRowId={getRowId}
+            suppressClickEdit={true}
           />
         </div>
       </div>
