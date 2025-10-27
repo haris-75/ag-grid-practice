@@ -1,4 +1,4 @@
-import type { DataRow } from "./types";
+import type { ColumnObject, DataRow } from "./types";
 
 const randomString = (length = 8): string => {
   const chars =
@@ -47,3 +47,24 @@ const generateRow = (): DataRow => {
 export function generateDataArray(n: number): DataRow[] {
   return Array.from({ length: n }, () => generateRow());
 }
+
+export const getColumnObject = (
+  key: string,
+  value: DataRow[keyof DataRow]
+): ColumnObject => {
+  const isBoolean = typeof value === "boolean";
+  return {
+    field: key,
+    headerName: key.replace(/_/g, " ").toUpperCase(),
+    sortable: true,
+    filter: true,
+    resizable: true,
+    editable: isBoolean, // only booleans editable
+    cellRenderer: isBoolean ? "toggleRenderer" : undefined,
+    cellStyle: {
+      fontSize: "0.875rem",
+      color: "#1f2937",
+      borderBottom: "1px solid #e5e7eb",
+    },
+  };
+};
