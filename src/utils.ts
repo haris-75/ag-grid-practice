@@ -19,7 +19,7 @@ const randomDate = (): string => {
 };
 
 const generateRow = (): DataRow => {
-  const obj: Record<string, string | number | boolean> = {};
+  const obj: DataRow = { id: randomString(20) };
 
   for (let j = 1; j <= 50; j++) {
     switch (j % 5) {
@@ -41,7 +41,7 @@ const generateRow = (): DataRow => {
     }
   }
 
-  return obj as DataRow;
+  return obj;
 };
 
 export function generateDataArray(n: number): DataRow[] {
@@ -59,7 +59,7 @@ export const getColumnObject = (
     sortable: true,
     filter: true,
     resizable: true,
-    editable: isBoolean, // only booleans editable
+    editable: isBoolean,
     cellRenderer: isBoolean ? "toggleRenderer" : undefined,
     cellStyle: {
       fontSize: "0.875rem",
