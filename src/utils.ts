@@ -1,4 +1,4 @@
-import type { DataRow } from "./types";
+import type { ColumnObject, DataRow } from "./types";
 
 const randomString = (length = 8): string => {
   const chars =
@@ -18,29 +18,8 @@ const randomDate = (): string => {
   return date.toISOString().split("T")[0];
 };
 
-const randomColor = (): string => {
-  const hue = Math.floor(Math.random() * 360);
-  const saturation = 50 + Math.random() * 50;
-  const lightness = 60 + Math.random() * 20;
-  const hslToHex = (h: number, s: number, l: number): string => {
-    s /= 100;
-    l /= 100;
-    const k = (n: number) => (n + h / 30) % 12;
-    const a = s * Math.min(l, 1 - l);
-    const f = (n: number) =>
-      l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
-    const toHex = (x: number) =>
-      Math.round(x * 255)
-        .toString(16)
-        .padStart(2, "0");
-    return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`;
-  };
-
-  return hslToHex(hue, saturation, lightness);
-};
-
 const generateRow = (): DataRow => {
-  const obj: Record<string, string | number | boolean> = {};
+  const obj: DataRow = { id: randomString(20) };
 
   for (let j = 1; j <= 50; j++) {
     switch (j % 5) {
@@ -62,9 +41,30 @@ const generateRow = (): DataRow => {
     }
   }
 
-  return { ...obj, rowColor: randomColor() } as DataRow;
+  return obj;
 };
 
 export function generateDataArray(n: number): DataRow[] {
   return Array.from({ length: n }, () => generateRow());
 }
+
+export const getColumnObject = (
+  key: string,
+  value: DataRow[keyof DataRow]
+): ColumnObject => {
+  const isBoolean = typeof value === "boolean";
+  return {
+    field: key,
+    headerName: key.replace(/_/g, " ").toUpperCase(),
+    sortable: true,
+    filter: true,
+    resizable: true,
+    editable: isBoolean,
+    cellRenderer: isBoolean ? "toggleRenderer" : undefined,
+    cellStyle: {
+      fontSize: "0.875rem",
+      color: "#1f2937",
+      borderBottom: "1px solid #e5e7eb",
+    },
+  };
+};

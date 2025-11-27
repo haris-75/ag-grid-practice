@@ -1,23 +1,24 @@
 import { type ReactElement } from "react";
 import type { ICellRendererParams } from "ag-grid-community";
 import type { DataRow } from "../types";
+import { useDataStore } from "../stores/useDataStore";
 
-const ToggleRenderer = (props: ICellRendererParams): ReactElement => {
-  const { value, data, colDef, api, node, context } = props;
+const ToggleRenderer = (
+  props: ICellRendererParams<DataRow, boolean>
+): ReactElement => {
+  const { value, data, colDef, api, node } = props;
+  const setCell = useDataStore((s) => s.setCell);
+
   const field = colDef?.field;
-  const setRowData = context?.setRowData;
 
   const handleToggle = () => {
-    if (!field || !setRowData) return;
-    const newValue = !value;
-
-    setRowData((prevData: DataRow[]) =>
-      prevData.map((row) =>
-        row === data ? { ...row, [field]: newValue } : row
-      )
-    );
-
-    api.refreshCells({ rowNodes: [node], columns: [field], force: true });
+    if (!field || !data) return;
+    setCell(data.id, field, !value);
+    api.refreshCells({
+      rowNodes: [node],
+      columns: [String(field)],
+      force: true,
+    });
   };
 
   return (
